@@ -9,7 +9,7 @@ and generate reports 📑 related to student participation.
 JU_AMS reduces paperwork 📂, improves operational efficiency ⚙️, and enhances communication 💬 between students and university management.
 
 
-1: SplashScren <img width="1898" height="920" alt="image" src="https://github.com/user-attachments/assets/460e1a26-8153-47da-b707-f213417ebbd4" />
+1: SplashScren <img width="1899" height="920" alt="Splash" src="https://github.com/user-attachments/assets/0ce72ea7-99a3-48d1-80d8-7d203a386ff7" />
 2: SignIn Page <img width="1898" height="920" alt="image" src="https://github.com/user-attachments/assets/0403a865-2fee-437f-8c78-c3653af57b50" />
 3: SignUp Page <img width="1898" height="920" alt="image" src="https://github.com/user-attachments/assets/0bbc60f8-8394-43e2-8140-5ed9b3ad6d8c" />
 4: Admin Dashboard <img width="1898" height="920" alt="image" src="https://github.com/user-attachments/assets/beb6492d-a999-41c0-80b3-ffa315e79c44" />
