@@ -1,0 +1,84 @@
+############################
+# 🔐 ENV / SECRETS
+############################
+!.env
+!.env.*
+!.env.example
+
+############################
+# 🐍 PYTHON
+############################
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+
+############################
+# 🟢 NODE / NPM / NESTJS
+############################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+############################
+# 🏗️ BUILD OUTPUTS
+############################
+dist/
+build/
+out/
+coverage/
+
+############################
+# 📦 TYPESCRIPT
+############################
+*.tsbuildinfo
+
+############################
+# 🖥️ OS FILES
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+# 🧠 EDITORS / IDEs
+############################
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+############################
+# 🧪 TEST / TEMP
+############################
+tmp/
+temp/
+.cache/
+logs/
+*.log
+
+############################
+# 📤 UPLOADS (OPTIONAL)
+############################
+uploads/*
+!uploads/.gitkeep
+
+############################
+# 🔧 GIT
+############################
+.git/
+.gitmodules

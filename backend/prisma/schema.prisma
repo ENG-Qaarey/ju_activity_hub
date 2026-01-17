@@ -1,0 +1,265 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  student
+  coordinator
+  admin
+}
+
+enum UserStatus {
+  active
+  inactive
+}
+
+enum ActivityCategory {
+  workshop
+  seminar
+  training
+  extracurricular
+}
+
+enum ActivityStatus {
+  upcoming
+  ongoing
+  completed
+}
+
+enum ApplicationStatus {
+  pending
+  approved
+  rejected
+}
+
+enum NotificationType {
+  approval
+  rejection
+  announcement
+  reminder
+}
+
+enum AttendanceStatus {
+  present
+  absent
+}
+
+enum AuditAction {
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  USER_CREATE
+  USER_UPDATE
+  USER_DELETE
+  USER_STATUS_TOGGLE
+  USER_ROLE_CHANGE
+  ACTIVITY_CREATE
+  ACTIVITY_UPDATE
+  ACTIVITY_DELETE
+  APPLICATION_CREATE
+  APPLICATION_STATUS_UPDATE
+  APPLICATION_DELETE
+  ATTENDANCE_MARK
+  NOTIFICATION_CREATE
+  NOTIFICATION_MARK_READ
+}
+
+model User {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  role           UserRole
+  studentId      String?
+  avatar         String?
+  department     String?
+  joinedAt       DateTime? @db.Date
+  status         UserStatus @default(active)
+  emailVerified  Boolean   @default(false)
+  emailVerificationCodeHash String?
+  emailVerificationCodeExpiresAt DateTime?
+  passwordHash   String
+  passwordVersion Int      @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  activitiesAsCoordinator Activity[]      @relation("CoordinatorActivities")
+  applications            Application[]
+  notifications           Notification[]
+  attendanceRecords      Attendance[]
+  markedAttendance       Attendance[]     @relation("MarkedByUser")
+  adminProfile           Admin?
+  coordinatorProfile     Coordinator?
+  auditLogsAsActor       AuditLog[] @relation("AuditActor")
+  auditLogsAsTarget      AuditLog[] @relation("AuditTarget")
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+model Admin {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  permissions     String   @db.Text // JSON array stored as text
+  accessLevel     String   @default("full") // full, limited, readonly
+  lastLogin       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admins")
+}
+
+model Coordinator {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  department      String?
+  specialization  String?  // Area of expertise
+  maxActivities   Int      @default(10) // Max number of activities they can manage
+  approvalLevel   String   @default("standard") // standard, senior
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([department])
+  @@map("coordinators")
+}
+
+model Activity {
+  id             String          @id @default(uuid())
+  title          String
+  description    String          @db.Text
+  category       ActivityCategory
+  date           DateTime        @db.Date
+  time           String
+  location       String
+  capacity       Int
+  enrolled       Int             @default(0)
+  coordinatorId  String
+  coordinatorName String
+  status         ActivityStatus  @default(upcoming)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  // Relations
+  coordinator    User            @relation("CoordinatorActivities", fields: [coordinatorId], references: [id])
+  applications   Application[]
+  attendance     Attendance[]
+
+  @@index([coordinatorId])
+  @@index([status])
+  @@index([date])
+  @@index([category])
+  @@map("activities")
+}
+
+model Application {
+  id            String            @id @default(uuid())
+  studentId     String
+  studentName   String
+  activityId    String
+  activityTitle String
+  appliedAt     DateTime          @db.Date
+  status        ApplicationStatus @default(pending)
+  notes         String?           @db.Text
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  // Relations
+  student       User              @relation(fields: [studentId], references: [id])
+  activity      Activity          @relation(fields: [activityId], references: [id])
+  attendance    Attendance?
+
+  @@unique([studentId, activityId])
+  @@index([studentId])
+  @@index([activityId])
+  @@index([status])
+  @@index([appliedAt])
+  @@index([activityId, status, studentName])
+  @@map("applications")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  title       String
+  message     String           @db.Text
+  type        NotificationType
+  read        Boolean          @default(false)
+  createdAt   DateTime         @db.Date
+  senderRole  UserRole?
+  recipientId String
+
+  // Relations
+  recipient   User             @relation(fields: [recipientId], references: [id])
+
+  @@index([read])
+  @@index([createdAt])
+  @@index([recipientId])
+  @@index([type])
+  @@map("notifications")
+}
+
+model Attendance {
+  id            String          @id @default(uuid())
+  activityId    String
+  studentId     String
+  studentName   String
+  applicationId String          @unique
+  status        AttendanceStatus
+  markedAt      DateTime        @db.Date
+  markedBy      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  activity      Activity        @relation(fields: [activityId], references: [id])
+  student       User            @relation(fields: [studentId], references: [id])
+  application   Application     @relation(fields: [applicationId], references: [id])
+  markedByUser  User            @relation("MarkedByUser", fields: [markedBy], references: [id])
+
+  @@unique([activityId, studentId])
+  @@index([activityId])
+  @@index([studentId])
+  @@index([status])
+  @@index([markedAt])
+  @@map("attendance")
+}
+
+model AuditLog {
+  id        String      @id @default(uuid())
+  action    AuditAction
+
+  actorId   String?
+  targetId  String?
+  entity    String?
+  entityId  String?
+
+  message   String?
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  target    User?    @relation("AuditTarget", fields: [targetId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([createdAt])
+  @@index([actorId])
+  @@index([targetId])
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}

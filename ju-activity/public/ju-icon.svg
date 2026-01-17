@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="JU-AMS icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#0b1120" />
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e0f2ff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#bae6fd" stop-opacity="0.2" />
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <style>
+      @keyframes pulse {
+        0% { transform: scale(0.98); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(0.98); }
+      }
+      @keyframes glow {
+        0% { opacity: 0.4; }
+        50% { opacity: 0.9; }
+        100% { opacity: 0.4; }
+      }
+      .card { animation: pulse 3s ease-in-out infinite; transform-origin: 64px 64px; }
+      .glare { animation: glow 4s ease-in-out infinite; }
+    </style>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)" />
+  <g class="card" filter="url(#glow)">
+    <rect x="18" y="22" width="92" height="84" rx="20" fill="url(#card)" stroke="#e0f2ff" stroke-width="3" />
+    <rect x="26" y="30" width="40" height="8" rx="4" fill="#0ea5e9" opacity="0.7" />
+    <rect x="26" y="44" width="24" height="6" rx="3" fill="#e0f2ff" opacity="0.8" />
+    <rect x="26" y="56" width="48" height="6" rx="3" fill="#e0f2ff" opacity="0.8" />
+    <rect x="26" y="68" width="32" height="6" rx="3" fill="#0ea5e9" opacity="0.9" />
+    <rect x="26" y="80" width="40" height="6" rx="3" fill="#e0f2ff" opacity="0.7" />
+    <text x="64" y="68" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" fill="#0f172a">JU-AMS</text>
+    <path class="glare" d="M28 34c18 8 50 6 72-8" stroke="url(#shine)" stroke-width="6" stroke-linecap="round" />
+  </g>
+</svg>

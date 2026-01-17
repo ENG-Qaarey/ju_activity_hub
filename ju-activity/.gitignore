@@ -1,0 +1,46 @@
+############################
+# 🔐 ENV / LOCAL
+############################
+!.env
+!.env.*
+*.local
+
+############################
+# 📦 DEPENDENCIES
+############################
+node_modules/
+
+############################
+# 🏗️ BUILD OUTPUTS
+############################
+dist/
+dist-ssr/
+
+############################
+# 📝 LOGS
+############################
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+############################
+# 🧪 TEMP / CACHE
+############################
+tmp_clerk_shared/
+
+############################
+# 🖥️ EDITORS / IDE
+############################
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
